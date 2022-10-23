@@ -59,7 +59,7 @@ function getPathInfo(){
   let data = JSON.parse(rawdata);
   let appurl = {};
   if(data.url === "http://example.com") {
-    appurl.name = __dirname + "/app.html";
+    appurl.name = __dirname + "/no-url.html";
     appurl.protocol = "file:";
   } else {
     appurl.name = data.url.replace("http://","");
