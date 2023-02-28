@@ -52,7 +52,7 @@ function setCvpPath(path) {
 
 function getConfig(){
   let path = app.getPath("userData") + "/config.json";
-  let rawdata = '{"url":"http://example.com","autorefresh":"* * * * * *"}';
+  let rawdata = '{"url":"http://example.com","autorefresh":"-1"}';
   try {
     rawdata = fs.readFileSync(path);
   } catch {

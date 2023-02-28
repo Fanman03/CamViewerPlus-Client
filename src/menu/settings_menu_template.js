@@ -25,7 +25,7 @@ export default {
 
 function openInstancePrompt() {
   let path = app.getPath("userData") + "/config.json";
-  let rawdata = '{"url":"http://example.com","autorefresh":"* * 8 * * *"}';
+  let rawdata = '{"url":"http://example.com","autorefresh":"-1"}';
   try {
     rawdata = fs.readFileSync(path);
   } catch {
@@ -56,7 +56,7 @@ function openInstancePrompt() {
 
 function openAutoRefreshPrompt() {
   let path = app.getPath("userData") + "/config.json";
-  let rawdata = '{"url":"http://example.com","autorefresh":"* * 8 * * *"}';
+  let rawdata = '{"url":"http://example.com","autorefresh":"-1"}';
   try {
     rawdata = fs.readFileSync(path);
   } catch {
