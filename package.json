@@ -1,8 +1,8 @@
 {
   "name": "camviewerplus-client",
   "productName": "CamViewerPlus Client",
-  "description": "Starter for your Electron application",
-  "version": "0.0.1",
+  "description": "Client optimized for viewing CamViewerPlus camera streams.",
+  "version": "1.0.0",
   "author": "Jack Pendleton",
   "main": "app/main.js",
   "build": {
@@ -15,7 +15,13 @@
     "directories": {
       "buildResources": "resources"
     },
-    "publish": null
+    "publish": null,
+    "win": {
+      "target": "msi"
+    },
+    "mac": {
+      "category": "public.app-category.utilities"
+    }
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -28,9 +34,11 @@
     "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder"
   },
   "dependencies": {
+    "about-window": "^1.15.2",
     "bootstrap": "^5.2.2",
     "electron-prompt": "^1.7.0",
-    "fs-jetpack": "^4.1.0"
+    "fs-jetpack": "^4.1.0",
+    "node-cron": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -38,12 +46,12 @@
     "babel-loader": "^8.2.2",
     "chai": "^4.1.0",
     "css-loader": "^5.2.0",
-    "electron": "^13.0.1",
-    "electron-builder": "^23.6.0",
-    "electron-mocha": "^10.0.0",
-    "mocha": "^8.3.2",
+    "electron": "^23.1.1",
+    "electron-builder": "^22.10.3",
+    "electron-mocha": "^11.0.2",
+    "mocha": "^10.2.0",
     "source-map-support": "^0.5.6",
-    "spectron": "^15.0.0",
+    "spectron": "^19.0.0",
     "style-loader": "^2.0.0",
     "webpack": "^5.30.0",
     "webpack-cli": "^4.6.0",

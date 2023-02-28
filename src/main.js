@@ -7,9 +7,11 @@ import path from "path";
 import url from "url";
 import { app, Menu, ipcMain, shell } from "electron";
 import appMenuTemplate from "./menu/app_menu_template";
+import settingsMenuTemplate from "./menu/settings_menu_template";
 import devMenuTemplate from "./menu/dev_menu_template";
 import createWindow from "./helpers/window";
 const fs = require('fs');
+const cron = require('node-cron');
 
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
@@ -27,7 +29,7 @@ if (env.name !== "production") {
 }
 
 const setApplicationMenu = () => {
-  const menus = [appMenuTemplate];
+  const menus = [appMenuTemplate, settingsMenuTemplate];
   if (env.name !== "production") {
     menus.push(devMenuTemplate);
   }
@@ -48,9 +50,9 @@ function setCvpPath(path) {
   console.log(path);
 }
 
-function getPathInfo(){
+function getConfig(){
   let path = app.getPath("userData") + "/config.json";
-  let rawdata = '{"url":"http://example.com"}';
+  let rawdata = '{"url":"http://example.com","autorefresh":"* * * * * *"}';
   try {
     rawdata = fs.readFileSync(path);
   } catch {
@@ -65,14 +67,14 @@ function getPathInfo(){
     appurl.name = data.url.replace("http://","");
     appurl.protocol = "http:";
   }
-  console.log(appurl.name);
-  return appurl;
+  return {"url":appurl,"autorefresh":data.autorefresh};
 }
 
 app.on("ready", () => {
   setApplicationMenu();
   initIpc();
 
+  let config = getConfig();
 
   const mainWindow = createWindow("main", {
     width: 1000,
@@ -90,13 +92,18 @@ app.on("ready", () => {
     }
   });
 
-  let pathInfo = getPathInfo();
+  if(config.autorefresh != -1){
+    cron.schedule(config.autorefresh, () => {
+      console.log("reloading...")
+      mainWindow.webContents.reloadIgnoringCache();
+    });
+  }  
 
   mainWindow.loadURL(
     url.format({
       // pathname: path.join(__dirname, "app.html"),
-      pathname: pathInfo.name,
-      protocol: pathInfo.protocol,
+      pathname: config.url.name,
+      protocol: config.url.protocol,
       slashes: true
     })
   );

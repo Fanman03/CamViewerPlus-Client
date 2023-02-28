@@ -1,18 +1,11 @@
 import { app } from "electron";
 import { BrowserWindow } from "electron";
-const prompt = require('electron-prompt');
-const fs = require('fs');
+const openAboutWindow = require('about-window').default;
 
 export default {
   label: "App",
   submenu: [
     {
-      label: "Set Instance URL",
-      accelerator: "CmdOrCtrl+I",
-      click: () => {
-        openPrompt();
-      }
-    }, {
       label: "Quit",
       accelerator: "CmdOrCtrl+Q",
       click: () => {
@@ -25,38 +18,12 @@ export default {
       click: () => {
         BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache();
       }
+    },
+    {
+      label: "About",
+      accelerator: "CmdOrCtrl+A",
+      click: () =>
+      openAboutWindow({icon_path:"https://i.imgur.com/SEvQwas.png","homepage":"https://github.com/Fanman03/CamViewerPlus-Client"})
     }
   ]
 };
-
-
-function openPrompt() {
-  let path = app.getPath("userData") + "/config.json";
-  let rawdata = '{"url":"http://example.com"}';
-  try {
-    rawdata = fs.readFileSync(path);
-  } catch {
-
-  }
-  let data = JSON.parse(rawdata);
-  prompt({
-    title: 'Set Instance URL',
-    label: 'URL:',
-    value: data.url,
-    inputAttrs: {
-      type: 'url'
-    },
-    type: 'input'
-  })
-    .then((r) => {
-      if (r === null) {
-        console.log('user cancelled');
-      } else {
-        data.url = r;
-        fs.writeFileSync(path, JSON.stringify(data));
-        app.relaunch()
-        app.exit()
-      }
-    })
-    .catch(console.error);
-}
