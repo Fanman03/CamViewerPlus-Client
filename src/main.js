@@ -46,10 +46,6 @@ const initIpc = () => {
   });
 };
 
-function setCvpPath(path) {
-  console.log(path);
-}
-
 function getConfig(){
   let path = app.getPath("userData") + "/config.json";
   let rawdata = '{"url":"http://example.com","autorefresh":"-1"}';
