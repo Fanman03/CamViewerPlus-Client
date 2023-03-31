@@ -3,6 +3,9 @@ import { BrowserWindow } from "electron";
 const prompt = require('electron-prompt');
 const fs = require('fs');
 
+
+const promptCss = __dirname + "/prompt.css";
+
 export default {
   label: "Configuration",
   submenu: [
@@ -17,6 +20,12 @@ export default {
       accelerator: "CmdOrCtrl+D",
       click: () => {
         openAutoRefreshPrompt();
+      }
+    }, {
+      label: "Open Settings",
+      accelerator: "CmdOrCtrl+S",
+      click: () => {
+        openSettings();
       }
     }
   ]
@@ -34,8 +43,10 @@ function openInstancePrompt() {
   let data = JSON.parse(rawdata);
   prompt({
     title: 'Set Instance URL',
-    label: 'URL:',
+    label: 'Instance URL:',
     value: data.url,
+    customStylesheet: promptCss,
+    height: 175,
     inputAttrs: {
       type: 'url'
     },
@@ -66,6 +77,8 @@ function openAutoRefreshPrompt() {
   prompt({
     title: 'Set Auto-Refresh Delay',
     label: 'Auto-Refresh Delay:',
+    customStylesheet: promptCss,
+    height: 175,
     value: data.autorefresh,
     type: 'select',
     selectOptions: {"-1":"Disabled","* * * * *":"1 minute","*/15 * * * *":"15 minutes","0 * * * *":"1 hour","0 */4 * * *":"4 hours","0 */8 * * *":"8 hours"}
@@ -81,4 +94,8 @@ function openAutoRefreshPrompt() {
       }
     })
     .catch(console.error);
+}
+
+function openSettings() {
+  BrowserWindow.getFocusedWindow().webContents.executeJavaScript('$("#settings").show();0');
 }
