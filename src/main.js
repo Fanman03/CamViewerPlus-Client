@@ -5,7 +5,7 @@
 
 import path from "path";
 import url from "url";
-import { app, Menu, ipcMain, shell } from "electron";
+import { app, Menu, ipcMain, shell, Notification } from "electron";
 import appMenuTemplate from "./menu/app_menu_template";
 import settingsMenuTemplate from "./menu/settings_menu_template";
 import devMenuTemplate from "./menu/dev_menu_template";
@@ -28,6 +28,11 @@ if (env.name !== "production") {
   app.setPath("userData", `${userDataPath} (${env.name})`);
 }
 
+if (process.platform === 'win32')
+{
+    app.setAppUserModelId(app.name);
+}
+
 const setApplicationMenu = () => {
   const menus = [appMenuTemplate, settingsMenuTemplate];
   if (env.name !== "production") {
@@ -46,7 +51,7 @@ const initIpc = () => {
   });
 };
 
-function getConfig(){
+function getConfig() {
   let path = app.getPath("userData") + "/config.json";
   let rawdata = '{"url":"http://example.com","autorefresh":"-1"}';
   try {
@@ -56,14 +61,14 @@ function getConfig(){
   }
   let data = JSON.parse(rawdata);
   let appurl = {};
-  if(data.url === "http://example.com") {
+  if (data.url === "http://example.com") {
     appurl.name = __dirname + "/no-url.html";
     appurl.protocol = "file:";
   } else {
-    appurl.name = data.url.replace("http://","");
+    appurl.name = data.url.replace("http://", "");
     appurl.protocol = "http:";
   }
-  return {"url":appurl,"autorefresh":data.autorefresh};
+  return { "url": appurl, "autorefresh": data.autorefresh, "grid": data.grid };
 }
 
 app.on("ready", () => {
@@ -88,21 +93,53 @@ app.on("ready", () => {
     }
   });
 
-  if(config.autorefresh != -1){
+  if (config.autorefresh != -1) {
     cron.schedule(config.autorefresh, () => {
       console.log("reloading...")
       mainWindow.webContents.reloadIgnoringCache();
     });
-  }  
+  }
 
-  mainWindow.loadURL(
-    url.format({
-      // pathname: path.join(__dirname, "app.html"),
-      pathname: config.url.name,
-      protocol: config.url.protocol,
-      slashes: true
-    })
-  );
+  if (config.grid != "-1" && config.grid != undefined) {
+    mainWindow.loadURL(
+      url.format({
+        // pathname: path.join(__dirname, "app.html"),
+        pathname: config.url.name + "/grids/" + config.grid,
+        protocol: config.url.protocol,
+        slashes: true,
+        query: {
+          "cl":"cvpc"
+        }
+      })
+    );
+  } else {
+    mainWindow.loadURL(
+      url.format({
+        // pathname: path.join(__dirname, "app.html"),
+        pathname: config.url.name,
+        protocol: config.url.protocol,
+        slashes: true,
+        query: {
+          "cl":"cvpc"
+        }
+      })
+    );
+  }
+
+  mainWindow.webContents.on("did-fail-load", function() {
+    new Notification({
+      title: "Error!",
+      body: "Unable to connect to CamViewerPlus Server. Please double-check your instance URL.",
+    }).show();
+    mainWindow.loadURL(
+      url.format({
+        // pathname: path.join(__dirname, "app.html"),
+        pathname: __dirname + "/error.html",
+        protocol: "file:",
+        slashes: true
+      })
+    );
+  });
 
   // if (env.name === "development") {
   //   mainWindow.openDevTools();

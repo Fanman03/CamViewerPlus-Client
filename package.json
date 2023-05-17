@@ -2,7 +2,7 @@
   "name": "camviewerplus-client",
   "productName": "CamViewerPlus Client",
   "description": "Client optimized for viewing CamViewerPlus camera streams.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "Jack Pendleton",
   "main": "app/main.js",
   "build": {
@@ -45,7 +45,8 @@
     "bootstrap": "^5.2.2",
     "electron-prompt": "^1.7.0",
     "fs-jetpack": "^4.1.0",
-    "node-cron": "^3.0.2"
+    "node-cron": "^3.0.2",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
