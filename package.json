@@ -38,7 +38,8 @@
     "e2e": "mocha temp/e2e.js --require source-map-support/register",
     "test": "npm run unit && npm run e2e",
     "start": "node build/start.js",
-    "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder"
+    "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder",
+    "release-dmg": "electron-installer-dmg '/dist/mac/CamViewerPlus Client.app' 'CamViewerPlus Client' --out=dmg --icon=/resources/icon.icns --title='CamViewerPlus Client' --overwrite"
   },
   "dependencies": {
     "about-window": "^1.15.2",
@@ -56,6 +57,7 @@
     "css-loader": "^5.2.0",
     "electron": "^23.1.1",
     "electron-builder": "^22.10.3",
+    "electron-installer-dmg": "^4.0.0",
     "electron-mocha": "^11.0.2",
     "mocha": "^10.2.0",
     "source-map-support": "^0.5.6",
