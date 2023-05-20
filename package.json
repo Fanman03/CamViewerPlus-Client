@@ -39,7 +39,8 @@
     "test": "npm run unit && npm run e2e",
     "start": "node build/start.js",
     "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder",
-    "release-dmg": "electron-installer-dmg '/dist/mac/CamViewerPlus Client.app' 'CamViewerPlus Client' --out=dmg --icon=/resources/icon.icns --title='CamViewerPlus Client' --overwrite"
+    "release-dmg": "electron-installer-dmg './dist/mac/CamViewerPlus Client.app' 'CamViewerPlus Client' --out=dmg --icon=./resources/icon.icns --title='CamViewerPlus Client' --overwrite && electron-installer-dmg './dist/mac-arm64/CamViewerPlus Client.app' 'CamViewerPlus Client' --out=dmg-arm64 --icon=./resources/icon.icns --title='CamViewerPlus Client' --overwrite"
+
   },
   "dependencies": {
     "about-window": "^1.15.2",
